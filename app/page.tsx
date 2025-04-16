@@ -273,13 +273,13 @@ export default function CVPage() {
   const years = Array.from({ length: currentYear - 2000 + 1 }, (_, i) => String(2000 + i)).reverse();
 
   return (
-    <div className="min-h-screen bg-[#0D0126] text-white p-6">
-      <div className="max-w-4xl mx-auto w-full">
+    <div className="min-h-screen bg-[#0D0126] text-white p-6 flex flex-col md:flex-row">
+      <div className="max-w-2xl w-full md:w-1/2 pr-6 overflow-y-auto">
         <h1 className="text-3xl font-bold text-[#FF66C4] mb-6">cv.dev</h1>
         <h2 className="text-2xl text-[#FF66C4] font-bold mb-4">Instruções</h2>
         <p className="mb-4">Preencha os campos abaixo para gerar seu currículo em PDF. O preview será atualizado automaticamente.</p>
 
-        <div className="flex flex-col gap-4 mb-6 md:grid md:grid-cols-2 md:gap-6">
+        <div className="flex flex-col gap-4 mb-6">
           <h2 className="text-2xl text-[#FF66C4] font-bold mb-2 md:col-span-2">Informações Pessoais</h2>
           <input name="name" placeholder="Nome" className="p-2 rounded bg-[#1A1038] text-white" onChange={handleChange} value={formData.name} />
           <input name="title" placeholder="Título Profissional" className="p-2 rounded bg-[#1A1038] text-white" onChange={handleChange} value={formData.title} />
@@ -321,7 +321,7 @@ export default function CVPage() {
                 {Object.entries(subcategories).map(([subcategory, options]) => (
                   <div key={subcategory} className="mb-3">
                     <label className="block mb-1 font-medium italic">{subcategory}</label>
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                    <div className="flex flex-wrap gap-2">
                       {options.map(option => (
                         <label key={option} className="flex items-center space-x-2">
                           <input
@@ -346,7 +346,7 @@ export default function CVPage() {
             {formData.experience.map((exp, index) => (
               <div key={index} className="mb-4 p-4 border border-gray-300 rounded">
                 <h3 className="text-xl font-semibold mb-2">Experiência {index + 1}</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="flex flex-col gap-4">
                   <input
                     type="text"
                     placeholder="Companhia/Empresa"
@@ -361,7 +361,7 @@ export default function CVPage() {
                     value={exp.title}
                     onChange={(e) => handleExperienceChange(index, 'title', e.target.value)}
                   />
-                  <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                  <div className="flex flex-col gap-2">
                     <select
                       className="p-2 rounded bg-[#1A1038] text-white"
                       value={exp.startDate.month}
@@ -379,38 +379,36 @@ export default function CVPage() {
                       {years.map(year => <option key={year} value={year}>{year}</option>)}
                     </select>
                   </div>
-                  <div className="grid grid-cols-3 gap-2 items-center">
-                    <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-                      <select
-                        className="p-2 rounded bg-[#1A1038] text-white"
-                        value={exp.endDate === 'Atual' ? 'Atual' : (typeof exp.endDate === 'object' ? exp.endDate.month : '')}
-                        onChange={(e) => handleExperienceChange(index, 'endDate', e.target.value === 'Atual' ? 'Atual' : { ...(typeof exp.endDate === 'object' ? exp.endDate : { month: '', year: '' }), month: e.target.value })}
-                        disabled={exp.isCurrent}
-                      >
-                        <option value="" disabled>Mês Fim</option>
-                        {months.map(month => <option key={month} value={month}>{month}</option>)}
-                        <option value="Atual">Atual</option>
-                      </select>
-                      <select
-                        className="p-2 rounded bg-[#1A1038] text-white"
-                        value={exp.endDate === 'Atual' ? String(currentYear) : (typeof exp.endDate === 'object' ? exp.endDate.year : '')}
-                        onChange={(e) => handleExperienceChange(index, 'endDate', e.target.value === 'Atual' ? 'Atual' : { ...(typeof exp.endDate === 'object' ? exp.endDate : { month: '', year: '' }), year: e.target.value })}
-                        disabled={exp.isCurrent}
-                      >
-                        <option value="" disabled>Ano Fim</option>
-                        {years.map(year => <option key={year} value={year}>{year}</option>)}
-                      </select>
-                    </div>
-                    <label className="flex items-center space-x-2 justify-end sm:justify-start">
-                      <input
-                        type="checkbox"
-                        checked={exp.isCurrent || false}
-                        onChange={(e) => handleExperienceChange(index, 'isCurrent', e.target.checked)}
-                        className="accent-[#FF66C4]"
-                      />
-                      <span>Atual</span>
-                    </label>
+                  <div className="flex flex-col gap-2">
+                    <select
+                      className="p-2 rounded bg-[#1A1038] text-white"
+                      value={exp.endDate === 'Atual' ? 'Atual' : (typeof exp.endDate === 'object' ? exp.endDate.month : '')}
+                      onChange={(e) => handleExperienceChange(index, 'endDate', e.target.value === 'Atual' ? 'Atual' : { ...(typeof exp.endDate === 'object' ? exp.endDate : { month: '', year: '' }), month: e.target.value })}
+                      disabled={exp.isCurrent}
+                    >
+                      <option value="" disabled>Mês Fim</option>
+                      {months.map(month => <option key={month} value={month}>{month}</option>)}
+                      <option value="Atual">Atual</option>
+                    </select>
+                    <select
+                      className="p-2 rounded bg-[#1A1038] text-white"
+                      value={exp.endDate === 'Atual' ? String(currentYear) : (typeof exp.endDate === 'object' ? exp.endDate.year : '')}
+                      onChange={(e) => handleExperienceChange(index, 'endDate', e.target.value === 'Atual' ? 'Atual' : { ...(typeof exp.endDate === 'object' ? exp.endDate : { month: '', year: '' }), year: e.target.value })}
+                      disabled={exp.isCurrent}
+                    >
+                      <option value="" disabled>Ano Fim</option>
+                      {years.map(year => <option key={year} value={year}>{year}</option>)}
+                    </select>
                   </div>
+                  <label className="flex items-center space-x-2 justify-end sm:justify-start">
+                    <input
+                      type="checkbox"
+                      checked={exp.isCurrent || false}
+                      onChange={(e) => handleExperienceChange(index, 'isCurrent', e.target.checked)}
+                      className="accent-[#FF66C4]"
+                    />
+                    <span>Atual</span>
+                  </label>
                   <textarea
                     placeholder="Descrição das Atividades Exercidas"
                     rows={4}
@@ -457,7 +455,7 @@ export default function CVPage() {
                     value={edu.degree}
                     onChange={(e) => handleEducationChange(index, 'degree', e.target.value)}
                   />
-                  <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                  <div className="flex flex-col gap-2">
                     <select
                       className="p-2 rounded bg-[#1A1038] text-white"
                       value={edu.startDate.month}
@@ -475,7 +473,7 @@ export default function CVPage() {
                       {years.map(year => <option key={year} value={year}>{year}</option>)}
                     </select>
                   </div>
-                  <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                  <div className="flex flex-col gap-2">
                     <select
                       className="p-2 rounded bg-[#1A1038] text-white"
                       value={edu.endDate === 'Atual' ? 'Atual' : (typeof edu.endDate === 'object' ? edu.endDate.month : '')}
@@ -530,27 +528,30 @@ export default function CVPage() {
             <label className="block mb-1 text-[#FF66C4] font-bold">Diferenciais</label>
             <textarea name="Diferenciais" rows={4} className="w-full p-2 rounded bg-[#1A1038] text-white" onChange={handleChange} value={formData.sections['Diferenciais']} />
           </div>
+
+          <button
+            onClick={handleDownload}
+            className="mt-6 bg-[#FF66C4] text-black font-bold px-6 py-2 rounded hover:bg-pink-400 transition w-full sm:w-auto"
+            disabled={!pdfPreviewUrl}
+          >
+            Baixar PDF
+          </button>
         </div>
+      </div>
 
-        <button
-          onClick={handleDownload}
-          className="mt-6 bg-[#FF66C4] text-black font-bold px-6 py-2 rounded hover:bg-pink-400 transition w-full sm:w-auto"
-          disabled={!pdfPreviewUrl}
-        >
-          Baixar PDF
-        </button>
-
-        {pdfPreviewUrl && (
-          <div className="mt-6 border border-gray-300 rounded overflow-hidden">
+      {pdfPreviewUrl && (
+        <div className="w-full md:w-1/2 pl-0 md:pl-6 mt-6 md:mt-0 h-[85vh] md:sticky md:top-0">
+          <h2 className="text-2xl text-[#FF66C4] font-bold mb-4">Preview do Currículo</h2>
+          <div className="border border-gray-300 rounded overflow-hidden h-full">
             <iframe
               src={pdfPreviewUrl}
               width="100%"
-              height="600px"
+              height="100%"
               title="Preview do Currículo"
             />
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
