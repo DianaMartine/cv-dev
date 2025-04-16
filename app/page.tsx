@@ -1,4 +1,3 @@
-// pages/index.tsx
 'use client'
 import { useState, useEffect, useCallback } from 'react';
 
@@ -250,6 +249,7 @@ mercado de desenvolvimento front-end.`,
   const handleEducationChange = (index: number, field: keyof Education, value: string | { month: string; year: string } | 'Atual' | undefined) => {
     setFormData(prev => {
       const newEducation = [...prev.education];
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       newEducation[index][field] = value as any; // Type assertion
       return { ...prev, education: newEducation };
     });
@@ -276,18 +276,20 @@ mercado de desenvolvimento front-end.`,
   };
 
   const generatePdf = useCallback(async () => {
-    setPdfPreviewUrl(null); // Limpa o preview anterior
+    setPdfPreviewUrl(null);
 
-    const res = await fetch('http://localhost:3001/api/generate', {
+    const response = await fetch('/api/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formData),
     });
 
-    const blob = await res.blob();
+    const blob = await response.blob();
+
     const url = window.URL.createObjectURL(blob);
-    setPdfPreviewUrl(url); // Define a URL para o preview
-  }, [formData]); // Dependência em formData para refazer a função quando formData mudar
+    console.log('url', url);
+    setPdfPreviewUrl(url);
+  }, [formData]);
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
