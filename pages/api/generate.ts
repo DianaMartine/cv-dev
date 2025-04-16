@@ -7,15 +7,6 @@ import pdfFonts from 'pdfmake/build/vfs_fonts';
 
 PDFDocument.vfs = pdfFonts.vfs;
 
-const fonts = {
-    Roboto: {
-        normal: path.join(process.cwd(), 'public/fonts/Roboto-Regular.ttf'),
-        bold: path.join(process.cwd(), 'public/fonts/Roboto-Medium.ttf'),
-        italics: path.join(process.cwd(), 'public/fonts/Roboto-Italic.ttf'),
-        bolditalics: path.join(process.cwd(), 'public/fonts/Roboto-MediumItalic.ttf'),
-    },
-}
-
 const fontsDir = path.join(process.cwd(), 'public/fonts');
 if (!fs.existsSync(fontsDir)) {
     fs.mkdirSync(fontsDir, { recursive: true });
@@ -96,9 +87,11 @@ export default async function handler(
                 content.push({ text: formData.sections['Sobre mim'] });
             }
 
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const skillsContent = [] as any;
             if (formData.skills) {
                 Object.entries(formData.skills).forEach(([category, subcategories]) => {
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     const categorySkills = [] as any;
                     Object.entries(subcategories || {}).forEach(([subcategory, skills]) => {
                         if (skills && skills.length > 0) {
@@ -119,6 +112,7 @@ export default async function handler(
             if (formData.experience && formData.experience.length > 0) {
                 const experienceContent = formData.experience
                     .filter(
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
                         (exp: any) =>
                             exp.company ||
                             exp.title ||
@@ -126,6 +120,7 @@ export default async function handler(
                             (exp.endDate && (exp.endDate === 'Atual' || (exp.endDate.month && exp.endDate.year))) ||
                             exp.description
                     )
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     .map((exp: any) => {
                         const parts = [];
                         if (exp.company) parts.push({ text: exp.company, style: 'experienceCompany' });
@@ -147,6 +142,7 @@ export default async function handler(
                             parts.push({ text: exp.description, style: 'experienceDescription', margin: [0, 5, 0, 10] });
                         return parts.length > 0 ? parts : null;
                     })
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     .filter((item: any) => item !== null)
                     .flat();
 
@@ -159,12 +155,14 @@ export default async function handler(
             if (formData.education && formData.education.length > 0) {
                 const educationContent = formData.education
                     .filter(
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
                         (edu: any) =>
                             edu.institution ||
                             edu.degree ||
                             (edu.startDate && edu.startDate.month && edu.startDate.year) ||
                             (edu.endDate && (edu.endDate === 'Atual' || (edu.endDate.month && edu.endDate.year)))
                     )
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     .map((edu: any) => {
                         const parts = [];
                         if (edu.institution) parts.push({ text: edu.institution, style: 'educationInstitution' });
@@ -186,6 +184,7 @@ export default async function handler(
                             parts.push({ text: edu.description, style: 'educationDescription', margin: [0, 5, 0, 10] });
                         return parts.length > 0 ? parts : null;
                     })
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     .filter((item: any) => item !== null)
                     .flat();
 
